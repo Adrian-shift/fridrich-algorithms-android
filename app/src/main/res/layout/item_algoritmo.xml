@@ -1,44 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="2dp"
+    android:layout_marginEnd="2dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="20dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:layout_marginBottom="16dp"
-    android:background="@drawable/fundo_cartao">
+    android:background="@drawable/fundo_cartao"
+    android:elevation="2dp"
+    android:padding="10dp">
 
-    <!-- Imagem do caso do cubo -->
+    <!-- IMAGEM DO CASO -->
     <ImageView
         android:id="@+id/imgCubo"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:scaleType="fitCenter"
-        android:src="@mipmap/ic_launcher" />
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:contentDescription="Imagem do caso"
+        android:scaleType="fitCenter" />
 
-    <!-- Título (caso 1) em minúsculo e negrito -->
+    <!-- NOME DO CASO -->
     <TextView
         android:id="@+id/txtCaso"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="caso 1"
-        android:textColor="#000000"
-        android:textSize="14sp"
-        android:textStyle="bold" />
-
-    <!-- Fórmula do Algoritmo -->
-    <TextView
-        android:id="@+id/txtAlgoritmo"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="R' U' R U' R' U2 R"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bolConheça a área de transferência do Gboard: qualquer texto copiado por você será salvo aqui.d"
-        android:letterSpacing="0.05" />
+        android:gravity="center"
+        android:textColor="#292929"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <!-- ALGORITMO -->
+    <TextView
+        android:id="@+id/txtAlgoritmo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:textColor="#111111"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.03" />
 
 </LinearLayout>
