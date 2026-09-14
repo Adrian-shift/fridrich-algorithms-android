@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginBottom="16dp"
+    android:background="@drawable/fundo_cartao">
+
+    <!-- Imagem do caso do cubo -->
+    <ImageView
+        android:id="@+id/imgCubo"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:scaleType="fitCenter"
+        android:src="@mipmap/ic_launcher" />
+
+    <!-- Título (caso 1) em minúsculo e negrito -->
+    <TextView
+        android:id="@+id/txtCaso"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="caso 1"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <!-- Fórmula do Algoritmo -->
+    <TextView
+        android:id="@+id/txtAlgoritmo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="R' U' R U' R' U2 R"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bolConheça a área de transferência do Gboard: qualquer texto copiado por você será salvo aqui.d"
+        android:letterSpacing="0.05" />
+
+</LinearLayout>
