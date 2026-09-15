@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+		ocultarBarraNavegacao();
 
         btnF2L = findViewById(R.id.btnF2L);
         btnOLL = findViewById(R.id.btnOLL);
@@ -80,6 +81,17 @@ public class MainActivity extends Activity {
 
         carregarAba();
     }
+	
+	@Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+            if (hasFocus) {
+                ocultarBarraNavegacao();
+            }
+    }
+
+
 
 
     // =========================================================
@@ -249,15 +261,15 @@ public class MainActivity extends Activity {
         adicionarCaso("Caso A1", "x R2 D2 R U R' D2 R U' R", R.drawable.pll_05_a1);
         adicionarCaso("Caso A2", "x R' U R' D2 R U' R' D2 R2", R.drawable.pll_06_a2);
         adicionarCaso("Caso T", "R U R' U' R' F R2 U' R' U' R U R' F'", R.drawable.pll_07_t);
-        adicionarCaso("Caso F", "R' U' F' R U R' U' R' F / R2 U' R' U' R U R' U R", R.drawable.pll_08_f);
-        adicionarCaso("Caso Y", "F R U' R' U' R U R' F' / R U R' U' R' F R F'", R.drawable.pll_09_y);
-        adicionarCaso("Caso E", "x' R U' R' D R U R' D' / R U R' D R U' R' D'", R.drawable.pll_10_e);
+        adicionarCaso("Caso F", "R' U' F' R U R' U' R' F R2 U' R' U' R U R' U R", R.drawable.pll_08_f);
+        adicionarCaso("Caso Y", "F R U' R' U' R U R' F' R U R' U' R' F R F'", R.drawable.pll_09_y);
+        adicionarCaso("Caso E", "x' R U' R' D R U R' D' R U R' D R U' R' D'", R.drawable.pll_10_e);
         adicionarCaso("Caso J1", "R U R' F' R U R' U' R' F R2 U' R' U'", R.drawable.pll_11_j1);
         adicionarCaso("Caso J2", "x R2 F R F' R U2 Rw' U Rw U2 x'", R.drawable.pll_12_j2);
         adicionarCaso("Caso R1", "R' U2 R U2 R' F R U R' U' R' F' R2 U'", R.drawable.pll_13_r1);
         adicionarCaso("Caso R2", "R U' R' U' R U R D R' U' R D' R' U2 R'", R.drawable.pll_14_r2);
-        adicionarCaso("Caso N1", "R U R' U R U R' F' R U R' U' R' / F R2 U' R' U2 R U' R'", R.drawable.pll_15_n1);
-        adicionarCaso("Caso N2", "R' U R U' R' F' U' F / R U R' F R' F' R U' R", R.drawable.pll_16_n2);
+        adicionarCaso("Caso N1", "R U R' U R U R' F' R U R' U' R' F R2 U' R' U2 R U' R'", R.drawable.pll_15_n1);
+        adicionarCaso("Caso N2", "R' U R U' R' F' U' F R U R' F R' F' R U' R", R.drawable.pll_16_n2);
         adicionarCaso("Caso V", "R' U R' U' y R' F' R2 U' R' U R' F R F", R.drawable.pll_17_v);
         adicionarCaso("Caso G1", "R2 U R' U R' U' R U' R2 U' D R' U R D'", R.drawable.pll_18_g1);
         adicionarCaso("Caso G2", "R' U' R U D' R2 U R' U R U' R U' R2 D", R.drawable.pll_19_g2);
@@ -549,4 +561,13 @@ private View obterCasoVertical(int indice) {
                 R.drawable.botao_selecionado
         );
     }
+	
+private void ocultarBarraNavegacao() {
+
+    getWindow().getDecorView().setSystemUiVisibility(
+        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+    );
+}
+
 }
