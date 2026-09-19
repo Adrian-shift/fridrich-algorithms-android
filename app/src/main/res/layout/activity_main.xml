@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#FAF9F5">
 
-    <!-- CABEÇALHO -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="52dp"
@@ -17,7 +15,6 @@
         android:paddingBottom="6dp"
         android:gravity="center_vertical">
 
-        <!-- F2L -->
         <Button
             android:id="@+id/btnF2L"
             android:layout_width="0dp"
@@ -34,7 +31,6 @@
             android:padding="0dp"
             android:stateListAnimator="@null" />
 
-        <!-- OLL -->
         <Button
             android:id="@+id/btnOLL"
             android:layout_width="0dp"
@@ -52,7 +48,6 @@
             android:padding="0dp"
             android:stateListAnimator="@null" />
 
-        <!-- PLL -->
         <Button
             android:id="@+id/btnPLL"
             android:layout_width="0dp"
@@ -70,7 +65,6 @@
             android:padding="0dp"
             android:stateListAnimator="@null" />
 
-        <!-- BOTÃO MODO DE VISUALIZAÇÃO -->
         <Button
             android:id="@+id/btnModoVisualizacao"
             android:layout_width="44dp"
@@ -84,29 +78,112 @@
             android:minWidth="0dp"
             android:padding="0dp"
             android:stateListAnimator="@null" />
-
     </LinearLayout>
 
-
-    <!-- ÁREA DOS ALGORITMOS -->
-    <ScrollView
-        android:id="@+id/scrollView"
+    <!--
+        Área principal.
+        O FrameLayout permite colocar elementos sobre o ScrollView,
+        como a futura barra de rolagem rápida e a miniatura flutuante.
+    -->
+    <FrameLayout
+        android:id="@+id/areaConteudo"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fillViewport="true"
-        android:clipToPadding="false">
+        android:clipChildren="false">
 
-        <LinearLayout
-            android:id="@+id/listaAlgoritmos"
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="16dp" />
+            android:layout_height="match_parent"
+			android:layout_marginEnd="32dp"
+            android:fillViewport="true"
+            android:clipToPadding="false">
+			android:scrollbars="none"
 
-    </ScrollView>
+            <LinearLayout
+                android:id="@+id/listaAlgoritmos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="16dp" />
+
+        </ScrollView>
+
+        <!--
+            Espaço reservado para a futura barra de rolagem rápida.
+            Ainda não possui comportamento nesta etapa.
+        -->
+        
+       
+<FrameLayout
+    android:id="@+id/fastScrollerArea"
+    android:layout_width="44dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="end"
+    android:clipChildren="false">
+
+    <View
+        android:id="@+id/fastTrack"
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/fast_track" />
+
+    <View
+        android:id="@+id/fastThumb"
+        android:layout_width="18dp"
+        android:layout_height="68dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/fast_thumb"
+        android:elevation="3dp" />
+
+</FrameLayout>
+
+
+
+
+        <!--
+            Espaço reservado para a futura miniatura flutuante.
+            Ficará invisível até a Etapa B.
+        -->
+        <LinearLayout
+            android:id="@+id/fastPreview"
+            android:layout_width="110dp"
+            android:layout_height="140dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="42dp"
+            android:orientation="vertical"
+            android:padding="6dp"
+            android:visibility="gone"
+            android:background="@drawable/fundo_cartao"
+            android:elevation="6dp">
+
+            <ImageView
+                android:id="@+id/fastPreviewImage"
+                android:layout_width="match_parent"
+                android:layout_height="108dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:contentDescription="Pré-visualização do caso" />
+
+            <TextView
+                android:id="@+id/fastPreviewText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:gravity="center"
+                android:textColor="#292929"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>

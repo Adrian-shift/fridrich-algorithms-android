@@ -10,6 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import android.view.MotionEvent;
+import android.widget.FrameLayout;
+
+
+
 public class MainActivity extends Activity {
 
     Button btnF2L;
@@ -19,6 +24,19 @@ public class MainActivity extends Activity {
 
     LinearLayout listaAlgoritmos;
     ScrollView scrollView;
+	
+    FrameLayout fastScrollerArea;
+    View fastThumb;
+
+    boolean arrastandoFastScroller = false;
+	
+	
+	FrameLayout areaConteudo;
+
+    LinearLayout fastPreview;
+    ImageView fastPreviewImage;
+    TextView fastPreviewText;
+
 
     boolean modoQuadro = false;
 
@@ -38,6 +56,25 @@ public class MainActivity extends Activity {
 
         listaAlgoritmos = findViewById(R.id.listaAlgoritmos);
         scrollView = findViewById(R.id.scrollView);
+		
+        // Desativa completamente a barra de rolagem nativa
+        scrollView.setVerticalScrollBarEnabled(false);
+        scrollView.setHorizontalScrollBarEnabled(false);
+        scrollView.setScrollbarFadingEnabled(false);
+
+		
+		
+        areaConteudo = findViewById(R.id.areaConteudo);
+
+        fastScrollerArea = findViewById(R.id.fastScrollerArea);
+        fastThumb = findViewById(R.id.fastThumb);
+
+        fastPreview = findViewById(R.id.fastPreview);
+        fastPreviewImage = findViewById(R.id.fastPreviewImage);
+        fastPreviewText = findViewById(R.id.fastPreviewText);
+
+        configurarFastScroller();
+
 
         btnF2L.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,48 +135,66 @@ public class MainActivity extends Activity {
     // CARREGA A ABA ATUAL
     // =========================================================
 
-    private void carregarAba() {
+private void carregarAba() {
 
-        limparLista();
+    limparLista();
 
-        if (modoQuadro) {
+    if (modoQuadro) {
 
-            btnModoVisualizacao.setText("☷");
+        // Modo quadro: ocupa toda a largura
+        scrollView.setLayoutParams(
+            new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+        );
 
-            if (abaAtual.equals("F2L")) {
-                carregarQuadroF2L();
-            }
-            else if (abaAtual.equals("OLL")) {
-                carregarQuadroOLL();
-            }
-            else {
-                carregarQuadroPLL();
-            }
+        btnModoVisualizacao.setText("☷");
 
-        } else {
-
-            btnModoVisualizacao.setText("▦");
-
-            if (abaAtual.equals("F2L")) {
-                carregarF2L();
-            }
-            else if (abaAtual.equals("OLL")) {
-                carregarOLL();
-            }
-            else {
-                carregarPLL();
-            }
+        if (abaAtual.equals("F2L")) {
+            carregarQuadroF2L();
+        }
+        else if (abaAtual.equals("OLL")) {
+            carregarQuadroOLL();
+        }
+        else {
+            carregarQuadroPLL();
         }
 
-        scrollView.post(new Runnable() {
-            @Override
-            public void run() {
-                scrollView.scrollTo(0, 0);
-            }
-        });
+    } else {
+
+        // Modo vertical: reserva espaço para o cursor
+        FrameLayout.LayoutParams params =
+            new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            );
+
+        params.setMargins(0, 0, 90, 0);
+
+        scrollView.setLayoutParams(params);
+
+        btnModoVisualizacao.setText("▦");
+
+        if (abaAtual.equals("F2L")) {
+            carregarF2L();
+        }
+        else if (abaAtual.equals("OLL")) {
+            carregarOLL();
+        }
+        else {
+            carregarPLL();
+        }
     }
 
-
+    scrollView.post(new Runnable() {
+        @Override
+        public void run() {
+            scrollView.scrollTo(0, 0);
+            atualizarPosicaoFastScroller();
+        }
+    });
+}
     // =========================================================
     // MODO VERTICAL
     // =========================================================
@@ -569,5 +624,351 @@ private void ocultarBarraNavegacao() {
         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
     );
 }
+
+
+
+
+private void configurarFastScroller() {
+	
+	
+fastScrollerArea.setOnTouchListener(
+    new View.OnTouchListener() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            switch (event.getAction()) {
+
+                case MotionEvent.ACTION_DOWN:
+
+                    arrastandoFastScroller = true;
+
+                    fastPreview.setVisibility(View.VISIBLE);
+
+                    atualizarPosicaoFastScroller(
+                        event.getRawY()
+                    );
+
+                    atualizarPreview();
+
+                    return true;
+
+
+                case MotionEvent.ACTION_MOVE:
+
+                    atualizarPosicaoFastScroller(
+                        event.getRawY()
+                    );
+
+                    atualizarPreview();
+
+                    return true;
+
+
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+
+                    arrastandoFastScroller = false;
+
+                    fastPreview.setVisibility(View.GONE);
+
+                    return true;
+            }
+
+            return true;
+        }
+    }
+);
+	
+	
+
+    fastThumb.setOnTouchListener(new View.OnTouchListener() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            switch (event.getAction()) {
+
+                case MotionEvent.ACTION_DOWN:
+
+                    arrastandoFastScroller = true;
+
+                    fastPreview.setVisibility(View.VISIBLE);
+
+                    atualizarPosicaoFastScroller(event.getRawY());
+                    atualizarPreview();
+
+                    return true;
+
+
+                case MotionEvent.ACTION_MOVE:
+
+                    atualizarPosicaoFastScroller(event.getRawY());
+					atualizarPreview();
+
+                    return true;
+
+
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+
+                    arrastandoFastScroller = false;
+					
+					fastPreview.setVisibility(View.GONE);
+
+                    return true;
+            }
+
+            return true;
+        }
+    });
+
+
+    scrollView.setOnScrollChangeListener(
+        new View.OnScrollChangeListener() {
+
+            @Override
+            public void onScrollChange(
+                    View v,
+                    int scrollX,
+                    int scrollY,
+                    int oldScrollX,
+                    int oldScrollY) {
+
+                if (!arrastandoFastScroller) {
+                    atualizarPosicaoFastScroller();
+                }
+            }
+        }
+    );
+
+
+    fastScrollerArea.post(new Runnable() {
+
+        @Override
+        public void run() {
+            atualizarPosicaoFastScroller();
+        }
+    });
+}
+
+
+private void atualizarPosicaoFastScroller() {
+
+    if (modoQuadro) {
+        fastScrollerArea.setVisibility(View.GONE);
+        return;
+    }
+
+    fastScrollerArea.setVisibility(View.VISIBLE);
+
+    View conteudo = scrollView.getChildAt(0);
+
+    if (conteudo == null) {
+        return;
+    }
+
+    int alturaConteudo = conteudo.getHeight();
+    int alturaScroll = scrollView.getHeight();
+
+    int distanciaRolagem = alturaConteudo - alturaScroll;
+
+    if (distanciaRolagem <= 0) {
+        fastThumb.setY(0);
+        return;
+    }
+
+    float porcentagem =
+            scrollView.getScrollY() / (float) distanciaRolagem;
+
+    float areaDisponivel =
+            fastScrollerArea.getHeight() - fastThumb.getHeight();
+
+    if (areaDisponivel <= 0) {
+        return;
+    }
+
+    float posicao =
+            porcentagem * areaDisponivel;
+
+    fastThumb.setY(posicao);
+}
+
+
+private void atualizarPosicaoFastScroller(float rawY) {
+
+    if (modoQuadro) {
+        return;
+    }
+
+    View conteudo = scrollView.getChildAt(0);
+
+    if (conteudo == null) {
+        return;
+    }
+
+    int alturaConteudo = conteudo.getHeight();
+    int alturaScroll = scrollView.getHeight();
+
+    int distanciaRolagem = alturaConteudo - alturaScroll;
+
+    if (distanciaRolagem <= 0) {
+        return;
+    }
+
+    int[] localizacao = new int[2];
+
+    fastScrollerArea.getLocationOnScreen(localizacao);
+
+    float y =
+            rawY - localizacao[1];
+
+    float areaDisponivel =
+            fastScrollerArea.getHeight() - fastThumb.getHeight();
+
+    if (areaDisponivel <= 0) {
+        return;
+    }
+
+    float novaPosicao =
+            y - (fastThumb.getHeight() / 2f);
+
+    if (novaPosicao < 0) {
+        novaPosicao = 0;
+    }
+
+    if (novaPosicao > areaDisponivel) {
+        novaPosicao = areaDisponivel;
+    }
+
+    float porcentagem =
+            novaPosicao / areaDisponivel;
+
+    int novoScrollY =
+            Math.round(porcentagem * distanciaRolagem);
+
+    fastThumb.setY(novaPosicao);
+
+    scrollView.scrollTo(0, novoScrollY);
+}
+
+
+
+
+
+
+
+
+private void atualizarPreview() {
+
+    if (!arrastandoFastScroller) {
+        return;
+    }
+
+    if (modoQuadro) {
+        return;
+    }
+
+    int indice = encontrarIndiceAtual();
+
+    View caso = obterCasoVertical(indice);
+
+    if (caso == null) {
+        return;
+    }
+
+    ImageView imagem =
+            caso.findViewById(R.id.imgCubo);
+
+    TextView titulo =
+            caso.findViewById(R.id.txtCaso);
+
+    if (imagem == null || titulo == null) {
+        return;
+    }
+
+    fastPreviewImage.setImageDrawable(imagem.getDrawable());
+    fastPreviewText.setText(titulo.getText());
+
+    posicionarPreview();
+}
+
+
+private int encontrarIndiceAtual() {
+
+    int quantidade =
+            listaAlgoritmos.getChildCount();
+
+    if (quantidade == 0) {
+        return 0;
+    }
+
+    int posicaoAtual =
+            scrollView.getScrollY()
+            + (scrollView.getHeight() / 3);
+
+    int indice = 0;
+
+    for (int i = 0; i < quantidade; i++) {
+
+        View caso =
+                listaAlgoritmos.getChildAt(i);
+
+        if (caso.getTop() <= posicaoAtual) {
+            indice = i;
+        } else {
+            break;
+        }
+    }
+
+    if (indice < 0) {
+        indice = 0;
+    }
+
+    if (indice >= quantidade) {
+        indice = quantidade - 1;
+    }
+
+    return indice;
+}
+
+
+private void posicionarPreview() {
+
+    if (fastPreview.getVisibility() != View.VISIBLE) {
+        return;
+    }
+
+    fastPreview.post(new Runnable() {
+
+        @Override
+        public void run() {
+
+            float centroThumb =
+                    fastThumb.getY()
+                    + (fastThumb.getHeight() / 2f);
+
+            float novaPosicao =
+                    centroThumb
+                    - (fastPreview.getHeight() / 2f);
+
+            float limiteInferior =
+                    areaConteudo.getHeight()
+                    - fastPreview.getHeight()
+                    - 8;
+
+            if (novaPosicao < 8) {
+                novaPosicao = 8;
+            }
+
+            if (novaPosicao > limiteInferior) {
+                novaPosicao = limiteInferior;
+            }
+
+            fastPreview.setY(novaPosicao);
+        }
+    });
+}
+
 
 }
